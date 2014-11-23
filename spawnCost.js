@@ -1,13 +1,10 @@
-/*
- * Module code goes here. Use 'module.exports' to export things:
- * module.exports = 'a thing';
+/* spawnCost.js
+ * spawnCost.builder(level) -- returns cost in energy to build each level of a creep
  * MOVE = 50
  * WORK = 20
  * CARRY = 50
  * ATTACK = 100
  * TOUGH = 5
- * You can import it from another modules like this:
- * var mod = require('spawnCost'); // -> 'a thing'
  */
 exports.builder = function(level){
     if(level === 0 || level === 1){

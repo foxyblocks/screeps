@@ -1,28 +1,16 @@
-var harvester = require('harvester');
-var builder = require('builder');
-var guard = require('guard');
-var spawnCost = require('spawnCost');
-var spawnCreep = require('spawnCreep');
+var memoryManager = require('memoryManager');
+var creepManager = require('creepManager');
+var spawnManager = require('spawnManager');
+ 
+// Memory Management
+memoryManager.clearDeadCreeps();
+memoryManager.updateSpawnInfo();
+memoryManager.guardCount();
+// Creep Management
+creepManager.roleActions();
 
-for(var i in Game.spawns){
-    var spawnName = Game.spawns[i].id;
-    if(Game.spawns[i].memory.id != spawnName){
-        Game.spawns[i].memory.id = i;
-    }
-}
-// To set Memory just use Memory.variable = data
-// Perform Role Actions
-for(var name in Game.creeps) {
-    var creep = Game.creeps[name];
-    if(creep.memory.role == 'guard'){
-        guard.defend(creep);
-    }
-    if(creep.memory == 'harvester' || creep.memory.role =='harvester') {
-        harvester.harvest(creep);
-    }
-
-    if(creep.memory.role == 'builder') {
-        builder.build(creep);
-    }
-    
-}
+// Spawn Management
+//spawnManager.queSpawn("Spawn1","guard",1);
+//spawnManager.queSpawn("Spawn1","builder",1);
+//spawnManager.queSpawn("Spawn1","harvester",1);
+spawnManager.evaluate("Spawn1", "init");
