@@ -5,8 +5,9 @@
  * You can import it from another modules like this:
  * var mod = require('builder'); // -> 'a thing'
  */
-  exports.spawn = function(spawnName, creepName){
-     Game.spawns[spawnName].createCreep( [Game.WORK, Game.WORK, Game.WORK, Game.CARRY, Game.MOVE], creepName, {'role':'builder'} );
+ var spawnCreep = require('spawnCreep');
+  exports.spawn = function(spawnName, creepName,level){
+      spawnCreep.builder(spawnName, creepName, level);
   }
   exports.build = function (creep) {
         if(creep.energy === 0) {
