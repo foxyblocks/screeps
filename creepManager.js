@@ -1,6 +1,8 @@
 /* creepManager.js
  * creepManager.getSpawning(creep) -- reads memory to check if a creep is still spawning
  * creepManager.setSpawning(creep,val) -- sets memory of a creep if it is spawning or not (val)
+ * creepManager.creepExists(creepType, creepID) -- returns true/false if a creep exists with given ID of given type
+ * creepManager.nextCreepName(creepType) -- returns the next available unique creep name based on type
  * creepManager.roleActions() -- makes each creep perform their role action
  * creepManager.spawnCreep.role(spawnName,creepName,level) -- spawns a creep with a role (replace role with a role type ex builder)
  */
@@ -38,6 +40,7 @@
  }
  exports.setSpawning = function(creep,val){
      Memory.creeps[creep].spawning = val;
+     return "complete"
  }
  exports.roleActions = function() {
      for(var creepName in Game.creeps) {
@@ -52,4 +55,5 @@
     	    builder.build(creep);
     	}
     }
+    return "complete"
  }
