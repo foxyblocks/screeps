@@ -27,14 +27,7 @@ exports.guardCount = function(){
     }
     return count;
 }
-exports.harvesterCount = function(){
-    var count = 0;
-    for(var i in Game.spawns){
-        count += Game.spawns[i].memory.children.alive.harvesters;
-    }
-    return count;
-}
-exports.harvesterCount = function(){
+exports.builderCount = function(){
     var count = 0;
     for(var i in Game.spawns){
         count += Game.spawns[i].memory.children.alive.builders;
