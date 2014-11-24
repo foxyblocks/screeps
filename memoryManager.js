@@ -1,8 +1,25 @@
 /* memoryManager.js
  * memoryManager.clearDeadCreeps() -- Clears dead creeps from the memory as to create new ones
  * memoryManager.updateSpawnInfo() -- updates spawn Memory info for each spawn based on current creeps
+ * memoryManager.guardCount() -- returns count of guard Creeps
+ * memoryManager.harvesterCount() -- returns count of harvester Creeps
+ * memoryManager.builderCount() -- returns count of builder Creeps
  */
 var creepManager = require('creepManager');
+exports.totalCount() = function(){
+    var count = 0;
+    for(var i in Game.spawns){
+        count += 1;
+    }
+    return count;
+}
+exports.harvesterCount = function(){
+    var count = 0;
+    for(var i in Game.spawns){
+        count += Game.spawns[i].memory.children.alive.harvesters;
+    }
+    return count;
+}
 exports.guardCount = function(){
     var count = 0;
     for(var i in Game.spawns){
@@ -14,6 +31,13 @@ exports.harvesterCount = function(){
     var count = 0;
     for(var i in Game.spawns){
         count += Game.spawns[i].memory.children.alive.harvesters;
+    }
+    return count;
+}
+exports.harvesterCount = function(){
+    var count = 0;
+    for(var i in Game.spawns){
+        count += Game.spawns[i].memory.children.alive.builders;
     }
     return count;
 }
