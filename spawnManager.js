@@ -22,9 +22,11 @@ var creepManager = require('creepManager');
          }
      }
      this.spawnNext(spawnName);
+     return "complete"
  };
  exports.clearQue = function(spawnName){
      Game.spawns[spawnName].spawnQue = {};
+     return "complete"
  };
  exports.queSpawn = function(spawnName,creepType,level){
     var nextQue = {"creepType": creepType, "level":level};
@@ -43,9 +45,26 @@ var creepManager = require('creepManager');
     }else{
         Game.spawns[spawnName].memory.spawnQue[0] = nextQue;
     }
+    return "complete"
  };
  exports.queUrgentSpawn = function(spawnName,creepType,level){
-    //Same as queSpawn but into the spawnUrgentQue for priority ques such as attacks.
+    var nextQue = {"creepType": creepType, "level":level};
+    var que = Game.spawns[spawnName].memory.spawnUrgentQue;
+    var firstNotified = null;
+    if(que){
+        var queLength = Object.keys(que).length;
+        for(var k = 0; k< 100; k++){
+                    if(!Game.spawns[spawnName].memory.spawnUrgentQue[k]){
+                        if(firstNotified===null){
+                            firstNotified=k;
+                        }
+                    }
+                }
+        Game.spawns[spawnName].memory.spawnUrgentQue[firstNotified] = nextQue;
+    }else{
+        Game.spawns[spawnName].memory.spawnUrgentQue[0] = nextQue;
+    }
+    return "complete"
  };
  exports.spawnQue = function(spawnName,spawnQue){
   //Gets the first slot that isn't empty
@@ -57,6 +76,7 @@ var creepManager = require('creepManager');
           }
           if(k>50){
               this.clearQue(spawnName);
+              return "empty"
           }
       }
   }
@@ -76,6 +96,8 @@ var creepManager = require('creepManager');
       }
       delete Game.spawns[spawnName].memory.spawnQue[firstNotified]
       return "complete"
+   }else{
+    return "empty"
    }
  };
  exports.spawnNext = function(spawnName){
@@ -92,15 +114,18 @@ var creepManager = require('creepManager');
             //spawn urgent que
             console.log("Manager: Spawn, Function: spawnNext.spawnQue(" + spawnName + "queUrgent), spawning next in que");
             this.spawnQue(spawnName, queUrgent);
+            return "urgent"
         }else{
             //spawn normal que
             if(queLength){
              console.log("Manager: Spawn, Function: spawnNext.spawnQue(" + spawnName + "que), spawning next in que");
              this.spawnQue(spawnName,que);
+             return "normal"
             }
         }
     }else{
         console.log(spawnName + " is working.")
+        return "busy"
         //Game.spawns[spawnName].memory.spawnStage = 2;
     }
  }
