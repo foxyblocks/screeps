@@ -7,6 +7,7 @@
  * ATTACK = 100
  * TOUGH = 5
  */
+var creepLevel = require('creepLevel');
 exports.getCost = function(parts){
     var sum = 0;
     var costs = {};
@@ -25,23 +26,11 @@ exports.getCost = function(parts){
     return sum;
 }
 exports.builder = function(level){
-    if(level === 0 || level === 1){
-        return 160; // 3xWORK 1xCARRY 1xMOVE
-    }else{
-        return 160;
-    }
+    return this.getCost(creepLevel.getParts("builder",level));
 };
-exports.harvester = function(spawnName, creepName, level){
-    if(level === 0 || level === 1){
-        return 120; // 1xWORK 1xCARRY 1xMOVE
-    }else{
-        return 120;
-    }
+exports.harvester = function(level){
+    return this.getCost(creepLevel.getParts("harvester",level));
 };
-exports.guard = function(spawnName, creepName, level){
-    if(level === 0 || level === 1){
-        return 205; // 1xTOUGH 2xMOVE 1xATTACK
-    }else{
-        return 205;
-    }
+exports.guard = function(level){
+    return this.getCost(creepLevel.getParts("guard",level));
 };

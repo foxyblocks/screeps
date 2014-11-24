@@ -1,7 +1,6 @@
 var memoryManager = require('memoryManager');
 var creepManager = require('creepManager');
 var spawnManager = require('spawnManager');
- 
 // Memory Management
 memoryManager.clearDeadCreeps();
 memoryManager.updateSpawnInfo();

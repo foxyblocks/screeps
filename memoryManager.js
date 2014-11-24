@@ -7,7 +7,7 @@
  * memoryManager.builderCount() -- returns count of builder Creeps
  */
 var creepManager = require('creepManager');
-exports.totalCount() = function(){
+exports.totalCount = function(){
     var count = 0;
     for(var i in Game.spawns){
         count += 1;
@@ -21,6 +21,14 @@ exports.harvesterCount = function(){
     }
     return count;
 }
+exports.queHarvesterCount = function(){
+    var count = 0;
+    for(var i in Game.spawns){
+        count += Game.spawns[i].memory.children.qued.harvesters;
+    }
+    return count;
+}
+
 exports.guardCount = function(){
     var count = 0;
     for(var i in Game.spawns){
@@ -28,10 +36,24 @@ exports.guardCount = function(){
     }
     return count;
 }
+exports.queGuardCount = function(){
+    var count = 0;
+    for(var i in Game.spawns){
+        count += Game.spawns[i].memory.children.qued.guards;
+    }
+    return count;
+}
 exports.builderCount = function(){
     var count = 0;
     for(var i in Game.spawns){
         count += Game.spawns[i].memory.children.alive.builders;
+    }
+    return count;
+}
+exports.queBuilderCount = function(){
+    var count = 0;
+    for(var i in Game.spawns){
+        count += Game.spawns[i].memory.children.qued.builders;
     }
     return count;
 }
@@ -77,6 +99,9 @@ exports.updateSpawnInfo = function(){
         if(!Game.spawns[i].memory.children){
             Game.spawns[i].memory.children = {};
         }
+        if(!Game.spawns[i].memory.children.qued){
+            Game.spawns[i].memory.children.qued = {};
+        }
         if(!Game.spawns[i].memory.children.created){
             Game.spawns[i].memory.children.created = 0;
         }
@@ -87,6 +112,50 @@ exports.updateSpawnInfo = function(){
         Game.spawns[i].memory.children.alive.builders = 0;
         Game.spawns[i].memory.children.alive.harvesters = 0;
         Game.spawns[i].memory.children.alive.guards = 0;
+        Game.spawns[i].memory.children.qued.total = 0;
+        Game.spawns[i].memory.children.qued.builders = 0;
+        Game.spawns[i].memory.children.qued.harvesters = 0;
+        Game.spawns[i].memory.children.qued.guards = 0;
+        var que = Game.spawns[i].memory.spawnQue;
+        var queLength;
+        if(que){
+            queLength = Object.keys(que).length;
+        }
+        var queUrgent = Game.spawns[i].memory.spawnUrgentQue;
+        var queUrgentLength;
+        if(queUrgent){
+            queUrgentLength = Object.keys(queUrgent).length;
+        }
+        for(var k = 0; k< queLength; k++){
+          if(que[k]){
+                Game.spawns[i].memory.children.qued.total += 1;
+                var creepType = que[k].creepType;
+                if(creepType === "builder"){
+                    Game.spawns[i].memory.children.qued.builders += 1;
+                }
+                if(creepType === "guard"){
+                    Game.spawns[i].memory.children.qued.guards += 1;
+                }
+                if(creepType === "harvester"){
+                    Game.spawns[i].memory.children.qued.harvesters += 1;
+                }
+            } 
+        }
+        for(var k = 0; k< queUrgentLength; k++){
+          if(queUrgent[k]){
+                Game.spawns[i].memory.children.qued.total += 1;
+                var creepType = queUrgent[k].creepType;
+                if(creepType === "builder"){
+                    Game.spawns[i].memory.children.qued.builders += 1;
+                }
+                if(creepType === "guard"){
+                    Game.spawns[i].memory.children.qued.guards += 1;
+                }
+                if(creepType === "harvester"){
+                    Game.spawns[i].memory.children.qued.harvesters += 1;
+                }
+            } 
+        }     
         for(var creepName in Game.creeps){
             var creep = Game.creeps[creepName];
             var parentSpawn = creep.memory.parentSpawn;

@@ -8,16 +8,34 @@
  */
 var memoryManager = require('memoryManager');
 var creepManager = require('creepManager');
+var spawnCost = require('spawnCost')
  exports.evaluate = function(spawnName,spawnType){
      if(spawnType === "init"){
          //spawn will be an init type by default unless changed (somewhat balanced)
-         if(memoryManager.harvesterCount() < 1){
+         var count = {
+          "alive" : {
+            "harvester" : memoryManager.harvesterCount(),
+            "guard" : memoryManager.guardCount(),
+            "builder" : memoryManager.builderCount()
+          },
+          "qued" : {
+            "harvester" : memoryManager.queHarvesterCount(),
+            "guard" : memoryManager.queGuardCount(),
+            "builder" : memoryManager.queBuilderCount()
+          },
+          "total" : {
+            "harvester" : memoryManager.queHarvesterCount() + memoryManager.harvesterCount(),
+            "guard" : memoryManager.queGuardCount() + memoryManager.guardCount(),
+            "builder" : memoryManager.queBuilderCount() + memoryManager.builderCount()
+          }
+         }
+         if(count.total.harvester < 1){
+             this.queSpawn(spawnName,"harvester",1 );
+         }
+         if(count.total.harvester < 5 && memoryManager.enemyCount() < 2 && Game.spawns[spawnName].energy >= (spawnCost.harvester(1) + spawnCost.guard(1))){
              this.queSpawn(spawnName,"harvester",1);
          }
-         if(memoryManager.harvesterCount() < 10 && memoryManager.enemyCount() < 2){
-             this.queSpawn(spawnName,"harvester",1);
-         }
-         if(memoryManager.guardCount() < (memoryManager.enemyCount()*1.2)){
+         if(count.total.guard < (memoryManager.enemyCount()*2)){
             this.queSpawn(spawnName,"guard",1);
          }
      }
@@ -73,16 +91,16 @@ var creepManager = require('creepManager');
       if(spawnQue[k]){
           if(firstNotified===null){
               firstNotified=k;
+              break;
           }
           if(k>50){
               this.clearQue(spawnName);
               return "empty"
           }
-      }
+      } 
   }
   //Spawns 1st creep in que
    if(firstNotified != null){
-    console.log("...firstNotified : " + firstNotified);
       var creepType = spawnQue[firstNotified].creepType;
       var level = spawnQue[firstNotified].level;
       if(creepType === "builder"){
@@ -112,13 +130,13 @@ var creepManager = require('creepManager');
     if(!Game.spawns[spawnName].spawning ){
         if(queUrgentLength){
             //spawn urgent que
-            console.log("Manager: Spawn, Function: spawnNext.spawnQue(" + spawnName + "queUrgent), spawning next in que");
+            console.log("Manager: Spawn, Function: spawnNext.spawnQue(" + spawnName + ", queUrgent)");
             this.spawnQue(spawnName, queUrgent);
             return "urgent"
         }else{
             //spawn normal que
             if(queLength){
-             console.log("Manager: Spawn, Function: spawnNext.spawnQue(" + spawnName + "que), spawning next in que");
+             console.log("Manager: Spawn, Function: spawnNext.spawnQue(" + spawnName + ", que)");
              this.spawnQue(spawnName,que);
              return "normal"
             }
