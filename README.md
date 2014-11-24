@@ -38,3 +38,19 @@ memoryManager.js will work with storing and retrieving data from the game Memory
  * creepManager.spawnCreep.role(spawnName,creepName,level) 
      * spawns a creep with a role (replace role with a role type)
        * Example: creepManager.spawnCreep.role(spawnName,creepName,level) 
+
+#spawnManager.js
+ * spawnManager.evaluate(spawnName,spawnType) => "complete"
+   * evaluates needs to spawn based on spawnType
+ * spawnManager.clearQue(spawnName)  => "complete"
+   * clears the que for given spawn
+ * spawnManager.queSpawn(spawnName,creepType,level) => "complete"
+   * adds a creepType with a given level to the spawn que of spawnName
+ * spawnManager.queUrgentSpawn(spawnName,creepType,level) => "complete"
+   * same as queSpawn but in the urgentQue which spawns first
+ * spawnManager.spawnQue(spawnName,spawnQue) => status 
+   * status = "complete" for success, "empty" for an empty que, "cleared" for que with over 50 empty slots
+   * spawns the next creep in the given que at a spawn.
+ * spawnManager.spawnNext(spawnName) => status
+   * status = "busy" for busy spawn, "normal" for spawning normal, "urgent" for Urgent que
+   * checks if there are creeps in the que and spawns them based on urgency
