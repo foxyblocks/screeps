@@ -11,12 +11,12 @@ Format:
   
 #memoryManager.js
   * memoryManager.clearDeadCreeps() -> "complete"
-      Clears dead creeps from the memory as to create new ones
+      * Clears dead creeps from the memory as to create new ones
   * memoryManager.updateSpawnInfo() -> "complete"
-      updates spawn Memory info for each spawn based on current creeps
+      * updates spawn Memory info for each spawn based on current creeps
   * memoryManager.guardCount() -> count (integer number of guards)
-      returns count of guard Creeps
-  * memoryManager.harvesterCount() -> count (integer number of harvester)
-      returns count of harvester Creeps
-  * memoryManager.builderCount() -> count (integer number of builder)
-      returns count of builder Creeps
+      * returns count of guard Creeps
+  * memoryManager.harvesterCount() -> count (integer number of harvesters)
+      * returns count of harvester Creeps
+  * memoryManager.builderCount() -> count (integer number of builders)
+      * returns count of builder Creeps
