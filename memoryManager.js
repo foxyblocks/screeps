@@ -1,6 +1,7 @@
 /* memoryManager.js
  * memoryManager.clearDeadCreeps() -- Clears dead creeps from the memory as to create new ones
  * memoryManager.updateSpawnInfo() -- updates spawn Memory info for each spawn based on current creeps
+ * memoryManager.totalCount() -- returns count of all Creeps
  * memoryManager.guardCount() -- returns count of guard Creeps
  * memoryManager.harvesterCount() -- returns count of harvester Creeps
  * memoryManager.builderCount() -- returns count of builder Creeps
@@ -63,6 +64,7 @@ exports.clearDeadCreeps = function(){
             }
         }
     }
+    return "complete"
 }
 exports.updateSpawnInfo = function(){
     for(var i in Game.spawns){
@@ -103,4 +105,5 @@ exports.updateSpawnInfo = function(){
             
         }
     }
+    return "complete";
 }
