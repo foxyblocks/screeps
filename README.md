@@ -6,7 +6,7 @@ memoryManager.js will work with storing and retrieving data from the game Memory
 Format:
 #module
   * module.function(params) -> returned data
-      Purpose of the function
+      * Purpose of the function
   
   
 #memoryManager.js
