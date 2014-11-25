@@ -34,7 +34,7 @@
     	if(creep.memory.role == 'builder') {
     	    builder.build(creep);
     	}
-        if(creep.memory.rol === 'medic'){
+        if(creep.memory.role === 'medic'){
             medic.healNearestGuard(creep);
         }
     }

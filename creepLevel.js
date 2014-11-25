@@ -5,11 +5,11 @@
 */
 var harvesterParts = {
 	"1": [Game.WORK,Game.CARRY,Game.MOVE], // 1xWORK 1xCARRY 1xMOVE
-	"2": [Game.WORK, Game.WORK, Game.CARRY, Game.CARRY,Game.MOVE]
+	"2": [Game.WORK, Game.WORK, Game.WORK, Game.CARRY,Game.MOVE]
 }
 var guardParts = {
-	"1": [Game.ATTACK, Game.ATTACK, Game.MOVE, Game.MOVE],
-	"2": [Game.ATTACK, Game.ATTACK, Game.ATTACK, Game.MOVE, Game.MOVE]
+	"1": [Game.MOVE, Game.MOVE, Game.ATTACK, Game.ATTACK ],
+	"2": [Game.MOVE, Game.MOVE, Game.ATTACK, Game.ATTACK, Game.ATTACK]
 }
 var builderParts = {
 	"1": [Game.WORK, Game.WORK, Game.MOVE, Game.MOVE],

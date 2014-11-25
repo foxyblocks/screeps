@@ -9,54 +9,59 @@
 var memoryManager = require('memoryManager');
 var creepManager = require('creepManager');
 var spawnCost = require('spawnCost')
+
  exports.evaluate = function(spawnName,spawnType){
      if(spawnType === "init"){
-         //spawn will be an init type by default unless changed (somewhat balanced)
-         var count = {
-          "alive" : {
-            "harvester" : memoryManager.harvesterCount(),
-            "guard" : memoryManager.guardCount(),
-            "builder" : memoryManager.builderCount(),
-            "medic" : memoryManager.medicCount()
-          },
-          "qued" : {
-            "harvester" : memoryManager.queHarvesterCount(),
-            "guard" : memoryManager.queGuardCount(),
-            "builder" : memoryManager.queBuilderCount(),
-            "medic" : memoryManager.queMedicCount()
-          },
-          "total" : {
-            "harvester" : memoryManager.queHarvesterCount() + memoryManager.harvesterCount(),
-            "guard" : memoryManager.queGuardCount() + memoryManager.guardCount(),
-            "builder" : memoryManager.queBuilderCount() + memoryManager.builderCount(),
-            "medic" : memoryManager.medicCount() + memoryManager.queMedicCount()
-          }
-         }
-         var quedCreep = false;
-         if(count.total.harvester < 4 && memoryManager.enemyCount() < 2 && Game.spawns[spawnName].energy >= (spawnCost.harvester(1) + spawnCost.guard(1))){
-           if(count.total.guard > 0 ){
-             console.log("Added harvester to que")
-             this.queSpawn(spawnName,"harvester",1);
-             quedCreep = true;
+        //spawn will be an init type by default unless changed (somewhat balanced)
+        var count = memoryManager.creepCount();
+        var quedCreep = false;
+
+        if(count.total.harvester < 4){
+          if(memoryManager.enemyCount() < 1){
+            if(Game.spawns[spawnName].energy >= spawnCost.harvester(2)){
+              if(count.total.guard > 0 && count.total.medic > 0){
+                this.queSpawn(spawnName,"harvester",2);
+                quedCreep = true;
+              }else{
+                if(count.total.medic < 1){
+                  this.queSpawn(spawnName,"medic",1);
+                  quedCreep = true;
+                }
+                if(count.total.guard < 1){
+                  this.queSpawn(spawnName,"guard",1);
+                  quedCreep = true;
+                }
+                
+              }
             }else{
-              console.log("Added guard to que")
-              this.queSpawn(spawnName,"guard",1);
-              quedCreep = true;
+              console.log("Need " + (spawnCost.harvester(2) - Game.spawns[spawnName].energy) + " energy to spawn a harvester")
             }
           }
-         if(count.alive.guard > 0 && count.total.medic < (count.alive.guard / 2)){
-          console.log("Added medic to que")
-            this.queSpawn(spawnName,"medic",1);
-            quedCreep = true;
-         }
-         if(count.total.guard < (memoryManager.enemyCount()*2) || count.total.guard < 1){
-            console.log("Added guard to que")
+        }
+        count = memoryManager.creepCount();
+        if(count.total.guard < (memoryManager.enemyCount()*2) || count.total.guard < 1){
+          if(Game.spawns[spawnName].energy >= spawnCost.guard(1)){
             this.queSpawn(spawnName,"guard",1);
             quedCreep = true;
-         }
-         if(quedCreep === false){
-            console.log("No actions required");
-         }
+          }else{
+            console.log("Need " + (spawnCost.guard(1) - Game.spawns[spawnName].energy) + " energy to spawn a guard")
+          }
+        }
+        count = memoryManager.creepCount();
+        if(count.alive.guard > 0 ){
+          if(count.total.medic < (count.alive.guard / 2) || count.total.medic < 1){
+            if(Game.spawns[spawnName].energy >= spawnCost.medic(1)){
+              this.queSpawn(spawnName,"medic",1);
+              quedCreep = true;
+            }else{
+              console.log("Need " + (spawnCost.medic(1) - Game.spawns[spawnName].energy) + " energy to spawn a medic")
+            }
+          }
+        }
+        count = memoryManager.creepCount();
+        if(quedCreep === false){
+          console.log("No actions required");
+        }
      }
      this.spawnNext(spawnName);
      return "complete"
@@ -82,7 +87,12 @@ var spawnCost = require('spawnCost')
     }else{
         Game.spawns[spawnName].memory.spawnQue[0] = nextQue;
     }
-    return "complete"
+    if(Game.spawns[spawnName].memory.spawnQue[firstNotified] === nextQue){
+      console.log("Added " + creepType + " to que")
+      return "complete"
+    }else{
+      return "failed"
+    }
  };
  exports.queUrgentSpawn = function(spawnName,creepType,level){
     var nextQue = {"creepType": creepType, "level":level};
@@ -122,6 +132,7 @@ var spawnCost = require('spawnCost')
    if(firstNotified != null){
       var creepType = spawnQue[firstNotified].creepType;
       var level = spawnQue[firstNotified].level;
+      delete Game.spawns[spawnName].memory.spawnQue[firstNotified]
       if(creepType === "builder"){
           creepManager.spawnCreep.builder(spawnName,level)
       }
@@ -134,7 +145,6 @@ var spawnCost = require('spawnCost')
       if(creepType === "medic"){
           creepManager.spawnCreep.medic(spawnName,level);
       }
-      delete Game.spawns[spawnName].memory.spawnQue[firstNotified]
       return "complete"
    }else{
     return "empty"
@@ -152,13 +162,13 @@ var spawnCost = require('spawnCost')
     if(!Game.spawns[spawnName].spawning ){
         if(queUrgentLength){
             //spawn urgent que
-            console.log("Manager: Spawn, Function: spawnNext.spawnQue(" + spawnName + ", queUrgent)");
+            //console.log("Manager: Spawn, Function: spawnNext.spawnQue(" + spawnName + ", queUrgent)");
             this.spawnQue(spawnName, queUrgent);
             return "urgent"
         }else{
             //spawn normal que
             if(queLength){
-             console.log("Manager: Spawn, Function: spawnNext.spawnQue(" + spawnName + ", que)");
+             //console.log("Manager: Spawn, Function: spawnNext.spawnQue(" + spawnName + ", que)");
              this.spawnQue(spawnName,que);
              return "normal"
             }

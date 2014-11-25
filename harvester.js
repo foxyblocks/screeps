@@ -5,7 +5,11 @@
  exports.harvest = function (creep) {
 
 	if(creep.energy < creep.energyCapacity) {
-	    var source = creep.pos.findNearest(Game.SOURCES);
+	    var source = creep.pos.findNearest(Game.SOURCES, {
+    		filter: function(object) {
+        		return object.energy > 0;
+    		}
+		});
         creep.moveTo(source);
         creep.harvest(source);
 	}

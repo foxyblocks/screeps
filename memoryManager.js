@@ -1,4 +1,5 @@
 /* memoryManager.js
+ * memoryManager.creepCount() -- returns counts of alive and qued creeps in an object count
  * memoryManager.clearDeadCreeps() -- Clears dead creeps from the memory as to create new ones
  * memoryManager.updateSpawnInfo() -- updates spawn Memory info for each spawn based on current creeps
  * memoryManager.totalCount() -- returns count of all Creeps
@@ -7,6 +8,30 @@
  * memoryManager.builderCount() -- returns count of builder Creeps
  */
 var creepManager = require('creepManager');
+exports.creepCount = function(){
+    var memoryManager = this;
+    var count = {
+          "alive" : {
+            "harvester" : memoryManager.harvesterCount(),
+            "guard" : memoryManager.guardCount(),
+            "builder" : memoryManager.builderCount(),
+            "medic" : memoryManager.medicCount()
+          },
+          "qued" : {
+            "harvester" : memoryManager.queHarvesterCount(),
+            "guard" : memoryManager.queGuardCount(),
+            "builder" : memoryManager.queBuilderCount(),
+            "medic" : memoryManager.queMedicCount()
+          },
+          "total" : {
+            "harvester" : memoryManager.queHarvesterCount() + memoryManager.harvesterCount(),
+            "guard" : memoryManager.queGuardCount() + memoryManager.guardCount(),
+            "builder" : memoryManager.queBuilderCount() + memoryManager.builderCount(),
+            "medic" : memoryManager.medicCount() + memoryManager.queMedicCount()
+          }
+         }
+    return count
+}
 exports.totalCount = function(){
     var count = 0;
     for(var i in Game.spawns){
@@ -193,7 +218,7 @@ exports.updateSpawnInfo = function(){
                 if(creep.memory.role === 'guard'){
                     Game.spawns[parentSpawn].memory.children.alive.guards += 1;
                 }
-                if(creepType === "medic"){
+                if(creep.memory.role === "medic"){
                     Game.spawns[parentSpawn].memory.children.alive.medics += 1;
                 }
             }
