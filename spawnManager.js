@@ -16,26 +16,37 @@ var spawnCost = require('spawnCost')
           "alive" : {
             "harvester" : memoryManager.harvesterCount(),
             "guard" : memoryManager.guardCount(),
-            "builder" : memoryManager.builderCount()
+            "builder" : memoryManager.builderCount(),
+            "medic" : memoryManager.medicCount()
           },
           "qued" : {
             "harvester" : memoryManager.queHarvesterCount(),
             "guard" : memoryManager.queGuardCount(),
-            "builder" : memoryManager.queBuilderCount()
+            "builder" : memoryManager.queBuilderCount(),
+            "medic" : memoryManager.queMedicCount()
           },
           "total" : {
             "harvester" : memoryManager.queHarvesterCount() + memoryManager.harvesterCount(),
             "guard" : memoryManager.queGuardCount() + memoryManager.guardCount(),
-            "builder" : memoryManager.queBuilderCount() + memoryManager.builderCount()
+            "builder" : memoryManager.queBuilderCount() + memoryManager.builderCount(),
+            "medic" : memoryManager.medicCount() + memoryManager.queMedicCount()
           }
          }
-         if(count.total.harvester < 1){
-             this.queSpawn(spawnName,"harvester",1 );
-         }
-         if(count.total.harvester < 5 && memoryManager.enemyCount() < 2 && Game.spawns[spawnName].energy >= (spawnCost.harvester(1) + spawnCost.guard(1))){
+         if(count.total.harvester < 4 && memoryManager.enemyCount() < 2 && Game.spawns[spawnName].energy >= (spawnCost.harvester(1) + spawnCost.guard(1))){
+           if(count.total.guard > 0){
+             console.log("Added harvester to que")
              this.queSpawn(spawnName,"harvester",1);
+            }else{
+              console.log("Added guard to que")
+              this.queSpawn(spawnName,"guard",1);
+            }
+          }
+         if(count.alive.guard > 0 && count.total.medic < (count.alive.guard*.66)){
+          console.log("Added medic to que")
+            this.queSpawn(spawnName,"medic",1);
          }
-         if(count.total.guard < (memoryManager.enemyCount()*2)){
+         if(count.total.guard < (memoryManager.enemyCount()*2) ){
+            console.log("Added guard to que")
             this.queSpawn(spawnName,"guard",1);
          }
      }
@@ -104,13 +115,16 @@ var spawnCost = require('spawnCost')
       var creepType = spawnQue[firstNotified].creepType;
       var level = spawnQue[firstNotified].level;
       if(creepType === "builder"){
-          creepManager.spawnCreep.builder(spawnName,creepManager.nextCreepName(creepType),level)
+          creepManager.spawnCreep.builder(spawnName,level)
       }
       if(creepType === "guard"){
-          creepManager.spawnCreep.guard(spawnName,creepManager.nextCreepName(creepType),level)
+          creepManager.spawnCreep.guard(spawnName,level)
       }
-      if(creepType === "harvester"){
-          creepManager.spawnCreep.harvester(spawnName,creepManager.nextCreepName(creepType),level)
+      if(creepType === "harvester"){ 
+          creepManager.spawnCreep.harvester(spawnName,level)
+      }
+      if(creepType === "medic"){
+          creepManager.spawnCreep.medic(spawnName,level);
       }
       delete Game.spawns[spawnName].memory.spawnQue[firstNotified]
       return "complete"

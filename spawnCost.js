@@ -34,3 +34,6 @@ exports.harvester = function(level){
 exports.guard = function(level){
     return this.getCost(creepLevel.getParts("guard",level));
 };
+exports.medic = function(level){
+    return this.getCost(creepLevel.getParts("medic",level));
+}

@@ -21,6 +21,7 @@ exports.harvesterCount = function(){
     }
     return count;
 }
+
 exports.queHarvesterCount = function(){
     var count = 0;
     for(var i in Game.spawns){
@@ -54,6 +55,20 @@ exports.queBuilderCount = function(){
     var count = 0;
     for(var i in Game.spawns){
         count += Game.spawns[i].memory.children.qued.builders;
+    }
+    return count;
+}
+exports.medicCount = function(){
+    var count = 0;
+    for(var i in Game.spawns){
+        count += Game.spawns[i].memory.children.alive.medics;
+    }
+    return count;
+}
+exports.queMedicCount = function(){
+    var count = 0;
+    for(var i in Game.spawns){
+        count += Game.spawns[i].memory.children.qued.medics;
     }
     return count;
 }
@@ -112,10 +127,12 @@ exports.updateSpawnInfo = function(){
         Game.spawns[i].memory.children.alive.builders = 0;
         Game.spawns[i].memory.children.alive.harvesters = 0;
         Game.spawns[i].memory.children.alive.guards = 0;
+        Game.spawns[i].memory.children.alive.medics = 0;
         Game.spawns[i].memory.children.qued.total = 0;
         Game.spawns[i].memory.children.qued.builders = 0;
         Game.spawns[i].memory.children.qued.harvesters = 0;
         Game.spawns[i].memory.children.qued.guards = 0;
+        Game.spawns[i].memory.children.qued.medics = 0;
         var que = Game.spawns[i].memory.spawnQue;
         var queLength;
         if(que){
@@ -139,6 +156,9 @@ exports.updateSpawnInfo = function(){
                 if(creepType === "harvester"){
                     Game.spawns[i].memory.children.qued.harvesters += 1;
                 }
+                if(creepType === "medic"){
+                    Game.spawns[i].memory.children.qued.medics += 1;
+                }
             } 
         }
         for(var k = 0; k< queUrgentLength; k++){
@@ -153,6 +173,9 @@ exports.updateSpawnInfo = function(){
                 }
                 if(creepType === "harvester"){
                     Game.spawns[i].memory.children.qued.harvesters += 1;
+                }
+                if(creepType === "medic"){
+                    Game.spawns[i].memory.children.qued.medics += 1;
                 }
             } 
         }     
@@ -169,6 +192,9 @@ exports.updateSpawnInfo = function(){
                 }
                 if(creep.memory.role === 'guard'){
                     Game.spawns[parentSpawn].memory.children.alive.guards += 1;
+                }
+                if(creepType === "medic"){
+                    Game.spawns[parentSpawn].memory.children.alive.medics += 1;
                 }
             }
             

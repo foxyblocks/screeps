@@ -4,17 +4,33 @@
  var spawnCost = require('spawnCost');
  var creepLevel = require('creepLevel');
  //var creepManager = require('creepManager');
-exports.builder = function(spawnName, creepName, level){
+ exports.creepExists = function(creepType, creepID){
+     var creepName = creepType+creepID;
+     if(Game.creeps[creepName]){
+         return true;
+     }else{
+         return false;
+     }
+ };
+  exports.nextCreepName = function(creepType){
+    var creepID = 0;
+    var f = false;
+    while ( f === false) {
+        if(this.creepExists(creepType,creepID) === false){
+            var creepName = creepType + creepID;
+            return creepName;
+            f = true;
+        }else{
+            creepID += 1; 
+        }
+    }
+ };
+exports.builder = function(spawnName, level){
     if(Game.spawns[spawnName]){
         if(Game.spawns[spawnName].energy >= spawnCost.builder(level)){
-            if(!Game.creeps[creepName]){
-                Game.spawns[spawnName].createCreep(  creepLevel.getParts("builder",level), creepName, {'role':'builder', 'parentSpawn':spawnName, 'spawning':true} );
-                Game.spawns[spawnName].memory.children.created += 1;
-                console.log("LOG: spawnCreep.builder: " + creepName + " being created at " + spawnName);
-            }else
-            {
-                console.log("ERROR: spawnCreep.builder: " + creepName + " already exists!");
-            }
+            var creepName = Game.spawns[spawnName].createCreep(  creepLevel.getParts("builder",level), this.nextCreepName("builder"), {'role':'builder', 'parentSpawn':spawnName, 'spawning':true} );
+            Game.spawns[spawnName].memory.children.created += 1;
+            console.log("LOG: spawnCreep.builder: " + creepName + " being created at " + spawnName);
         }else{
             console.log("ERROR: " + spawnName + " has " + Game.spawns[spawnName].energy + "/" + spawnCost.builder(level) + "energy to spawn builder");
         }
@@ -22,17 +38,25 @@ exports.builder = function(spawnName, creepName, level){
         console.log("ERROR: spawnCreep.builder: " + spawnName + " doesn't exist!");
     }
 };
-exports.harvester = function(spawnName, creepName, level){
+exports.medic = function(spawnName, level){
+    if(Game.spawns[spawnName]){
+        if(Game.spawns[spawnName].energy >= spawnCost.medic(level)){
+            var creepName = Game.spawns[spawnName].createCreep(  creepLevel.getParts("medic",level), this.nextCreepName("medic"), {'role':'medic', 'parentSpawn':spawnName, 'spawning':true} );
+            Game.spawns[spawnName].memory.children.created += 1;
+            console.log("LOG: spawnCreep.medic: " + creepName + " being created at " + spawnName);
+        }else{
+            console.log("ERROR: " + spawnName + " has " + Game.spawns[spawnName].energy + "/" + spawnCost.medic(level) + "energy to spawn medic");
+        }
+    }else{
+        console.log("ERROR: spawnCreep.medic: " + spawnName + " doesn't exist!");
+    }
+};
+exports.harvester = function(spawnName, level){
     if(Game.spawns[spawnName]){
         if(Game.spawns[spawnName].energy >= spawnCost.harvester(level)){
-            if(!Game.creeps[creepName]){
-                Game.spawns[spawnName].createCreep( creepLevel.getParts("harvester",level), creepName, {'role':'harvester', 'parentSpawn':spawnName, 'spawning':true} );
-                Game.spawns[spawnName].memory.children.created += 1;
-                console.log("LOG: spawnCreep.harvester: " + creepName + " being created at " + spawnName);
-            }else
-            {
-                console.log("ERROR: spawnCreep.harvester: " + creepName + " already exists!");
-            }
+            var creepName = Game.spawns[spawnName].createCreep( creepLevel.getParts("harvester",level), this.nextCreepName("harvester"), {'role':'harvester', 'parentSpawn':spawnName, 'spawning':true} );
+            Game.spawns[spawnName].memory.children.created += 1;
+            console.log("LOG: spawnCreep.harvester: " + creepName + " being created at " + spawnName);
         }else{
             console.log("ERROR: " + spawnName + " has " + Game.spawns[spawnName].energy + "/" + spawnCost.harvester(level) + "energy to spawn harvester");
         }
@@ -40,17 +64,12 @@ exports.harvester = function(spawnName, creepName, level){
         console.log("ERROR: spawnCreep.harvester: " + spawnName + " doesn't exist!");
     }
 };
-exports.guard = function(spawnName, creepName, level){
+exports.guard = function(spawnName, level){
     if(Game.spawns[spawnName]){
         if(Game.spawns[spawnName].energy >= spawnCost.guard(level)){
-            if(!Game.creeps[creepName]){
-                Game.spawns[spawnName].createCreep( creepLevel.getParts("guard",level), creepName, {'role':'guard','parentSpawn':spawnName, 'spawning':true} );
-                Game.spawns[spawnName].memory.children.created += 1;
-                console.log("LOG: spawnCreep.guard: " + creepName + " being created at " + spawnName);
-            }else
-            {
-                console.log("ERROR: spawnCreep.guard: " + creepName + " already exists!");
-            }
+            var creepName = Game.spawns[spawnName].createCreep( creepLevel.getParts("guard",level), this.nextCreepName("guard"), {'role':'guard','parentSpawn':spawnName, 'spawning':true} );
+            Game.spawns[spawnName].memory.children.created += 1;
+            console.log("LOG: spawnCreep.guard: " + creepName + " being created at " + spawnName);
         }else{
             console.log("ERROR: " + spawnName + " has " + Game.spawns[spawnName].energy + "/" + spawnCost.guard(level) + "energy to spawn guard");
         }

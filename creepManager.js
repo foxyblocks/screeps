@@ -10,27 +10,6 @@
  var builder = require('builder');
  var guard = require('guard');
  exports.spawnCreep = require('spawnCreep');
- exports.creepExists = function(creepType, creepID){
-     var creepName = creepType+creepID;
-     if(Game.creeps[creepName]){
-         return true;
-     }else{
-         return false;
-     }
- };
- exports.nextCreepName = function(creepType){
-    var creepID = 0;
-    var f = false;
-    while ( f === false) {
-        if(this.creepExists(creepType,creepID) === false){
-            var creepName = creepType + creepID;
-            return creepName;
-            f = true;
-        }else{
-            creepID += 1; 
-        }
-    }
- }
  exports.getSpawning = function(creep){
      if(Memory.creeps[creep].spawning === true){
          return true;

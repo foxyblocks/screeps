@@ -27,14 +27,13 @@ memoryManager.js will work with storing and retrieving data from the game Memory
      * reads memory to check if a creep is still spawning
  * creepManager.setSpawning(creep,true/false) => "complete" 
      * sets memory of a creep if it is spawning or not (val)
- * creepManager.creepExists(creepType, creepID) => true or false
-     * returns true/false if a creep exists with given ID of given type
  * creepManager.nextCreepName(creepType) => creepName
      * returns the next available unique creep name based on type
  * creepManager.roleActions() => "complete"
      * makes each creep perform their role action
- * Access to spawnCreep.js 
- * === May move to spawnManager.js  ===
+ * === Access to spawnCreep.js ===
+ * creepManager.spawnCreep.creepExists(creepType, creepID) => true or false
+     * returns true/false if a creep exists with given ID of given type
  * creepManager.spawnCreep.role(spawnName,creepName,level) 
      * spawns a creep with a role (replace role with a role type)
        * Example: creepManager.spawnCreep.role(spawnName,creepName,level) 
