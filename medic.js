@@ -9,7 +9,7 @@
 		});
 		var nearGuard = creep.pos.findNearest(Game.MY_CREEPS, {
 		    filter: function(object) {
-		        return object.memory.role == "guard";
+		        return object.memory.role == "guard" && object.hits < object.hitsMax;
 		    }
 		});
     	if(nearGuard) {
