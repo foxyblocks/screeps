@@ -9,6 +9,7 @@
  var harvester = require('harvester');
  var builder = require('builder');
  var guard = require('guard');
+ var medic = require('medic');
  exports.spawnCreep = require('spawnCreep');
  exports.getSpawning = function(creep){
      if(Memory.creeps[creep].spawning === true){
@@ -33,6 +34,9 @@
     	if(creep.memory.role == 'builder') {
     	    builder.build(creep);
     	}
+        if(creep.memory.rol === 'medic'){
+            medic.healNearestGuard(creep);
+        }
     }
     return "complete"
  }

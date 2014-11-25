@@ -32,22 +32,30 @@ var spawnCost = require('spawnCost')
             "medic" : memoryManager.medicCount() + memoryManager.queMedicCount()
           }
          }
+         var quedCreep = false;
          if(count.total.harvester < 4 && memoryManager.enemyCount() < 2 && Game.spawns[spawnName].energy >= (spawnCost.harvester(1) + spawnCost.guard(1))){
-           if(count.total.guard > 0){
+           if(count.total.guard > 0 ){
              console.log("Added harvester to que")
              this.queSpawn(spawnName,"harvester",1);
+             quedCreep = true;
             }else{
               console.log("Added guard to que")
               this.queSpawn(spawnName,"guard",1);
+              quedCreep = true;
             }
           }
-         if(count.alive.guard > 0 && count.total.medic < (count.alive.guard*.66)){
+         if(count.alive.guard > 0 && count.total.medic < (count.alive.guard / 2)){
           console.log("Added medic to que")
             this.queSpawn(spawnName,"medic",1);
+            quedCreep = true;
          }
-         if(count.total.guard < (memoryManager.enemyCount()*2) ){
+         if(count.total.guard < (memoryManager.enemyCount()*2) || count.total.guard < 1){
             console.log("Added guard to que")
             this.queSpawn(spawnName,"guard",1);
+            quedCreep = true;
+         }
+         if(quedCreep === false){
+            console.log("No actions required");
          }
      }
      this.spawnNext(spawnName);
