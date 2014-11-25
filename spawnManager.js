@@ -49,7 +49,7 @@ var spawnCost = require('spawnCost')
         }
         count = memoryManager.creepCount();
         if(count.alive.guard > 0 ){
-          if(count.total.medic < (count.alive.guard / 2) || count.total.medic < 1){
+          if(count.total.medic < (count.alive.guard) || count.total.medic < 1){
             if(Game.spawns[spawnName].energy >= spawnCost.medic(1)){
               this.queSpawn(spawnName,"medic",1);
               quedCreep = true;
