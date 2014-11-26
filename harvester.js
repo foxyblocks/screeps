@@ -10,6 +10,11 @@
         		return object.energy > 0;
     		}
 		});
+		if(!creep.memory.mineSource){
+		    creep.memory.mineSource = source.id;
+		    console.log(creep.name + " will mine source: " + source.id)
+		}
+		//Add checks to compare if any enemies are in the regions surrounding
         creep.moveTo(source);
         creep.harvest(source);
 	}

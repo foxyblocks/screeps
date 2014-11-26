@@ -10,7 +10,7 @@
         if(creep.energy === 0) {
             
 			creep.moveTo(Game.spawns[creep.memory.parentSpawn]);
-			Game.spawns.Spawn1.transferEnergy(creep);
+			Game.spawns[creep.memory.parentSpawn].transferEnergy(creep);
 		}
 		else {
 		    var neartarget = creep.pos.findNearest(Game.CONSTRUCTION_SITES);

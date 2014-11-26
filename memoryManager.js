@@ -28,9 +28,35 @@ exports.creepCount = function(){
             "guard" : memoryManager.queGuardCount() + memoryManager.guardCount(),
             "builder" : memoryManager.queBuilderCount() + memoryManager.builderCount(),
             "medic" : memoryManager.medicCount() + memoryManager.queMedicCount()
-          }
+          },
+          "mineSources":memoryManager.sourceCount(),
+          "enemies": memoryManager.enemyCount()
          }
+    Memory.count = count;
     return count
+
+}
+exports.sourceCount = function(){
+    var gameRoom = null;
+    for(var i in Game.spawns){
+        if(gameRoom === null){
+            gameRoom = Game.spawns[i].room
+        }
+    }
+    var sources = gameRoom.find(Game.SOURCES)
+    var allSourceData = {};
+    for(var i in sources){
+        var sourceData = {"harvesters":0,"energy":sources[i].energy};
+        allSourceData[i] = sourceData
+    }
+    for(var creepName in Game.creeps){
+        var creep = Game.creeps[creepName];
+        var mineSource = creep.memory.mineSource;
+        if(mineSource){
+            allSourceData[i].harvesters +=1
+        }
+    }
+    return allSourceData;
 }
 exports.totalCount = function(){
     var count = 0;
@@ -135,6 +161,9 @@ exports.updateSpawnInfo = function(){
         }
         if(!Game.spawns[i].memory.spawnQue){
             Game.spawns[i].memory.spawnQue = {};
+        }
+        if(!Game.spawns[i].memory.spawnUrgetnQue){
+            Game.spawns[i].memory.spawnUrgetnQue = {};
         }
         if(!Game.spawns[i].memory.children){
             Game.spawns[i].memory.children = {};
